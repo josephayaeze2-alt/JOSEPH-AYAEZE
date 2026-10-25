@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proxy Hub</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px;
+    color: #fff;
+  }
+
+  .credits-btn {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .credits-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-bottom: 50px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 18px;
+    padding: 32px 24px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  }
+
+  .icon { font-size: 2.2rem; margin-bottom: 4px; }
+  .card-name { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.3px; }
+  .card-sub { font-size: 0.8rem; opacity: 0.75; }
+
+  footer {
+    margin-top: 50px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: linear-gradient(160deg, #5a4b9c 0%, #3e2f6e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 36px 40px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    animation: pop 0.25s ease;
+  }
+
+  @keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal h2 {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+    letter-spacing: 0.3px;
+  }
+
+  .credit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+
+  .credit-name { font-weight: 600; font-size: 1.05rem; }
+
+  .credit-rank {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .rank-owner { background: #ffb347; color: #3a2400; }
+  .rank-coowner { background: #a0a0ff; color: #1a1a4a; }
+  .rank-admin { background: #6ee7b7; color: #053a26; }
+  .rank-mod { background: #f472b6; color: #4a0526; }
+
+  .close-btn {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 28px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .close-btn:hover { background: rgba(255, 255, 255, 0.28); }
+</style>
+</head>
+<body>
+
+  <button class="credits-btn" onclick="document.getElementById('creditsModal').classList.add('active')">
+    Credits
+  </button>
+
+  <h1>Proxy Hub</h1>
+  <p class="subtitle">Pick a site to launch</p>
+
+  <div class="grid">
+    <a class="card" href="https://s3.amazonaws.com/jse72q6/index.html" target="_blank" rel="noopener">
+      <div class="icon">🪵</div>
+      <div class="card-name">Tung Tung</div>
+      <div class="card-sub">jse72q6</div>
+    </a>
+
+    <a class="card" href="https://chrisets.s3.amazonaws.com/index.html#goog_rewarded" target="_blank" rel="noopener">
+      <div class="icon">🍒</div>
+      <div class="card-name">Cherri</div>
+      <div class="card-sub">chrisets</div>
+    </a>
+
+    <a class="card" href="https://niigo.s3.amazonaws.com/index.html" target="_blank" rel="noopener">
+      <div class="icon">✨</div>
+      <div class="card-name">Aether</div>
+      <div class="card-sub">niigo</div>
+    </a>
+
+    <a class="card" href="https://s3.amazonaws.com/frnsobk/index.html" target="_blank" rel="noopener">
+      <div class="icon">🌿</div>
+      <div class="card-name">Frn</div>
+      <div class="card-sub">frnsobk</div>
+    </a>
+
+    <a class="card" href="https://sites.google.com/view/classroom6x/" target="_blank" rel="noopener">
+      <div class="icon">🎓</div>
+      <div class="card-name">6X</div>
+      <div class="card-sub">classroom6x</div>
+    </a>
+  </div>
+
+  <footer>Click any card to open the site</footer>
+
+  <div class="modal-overlay" id="creditsModal" onclick="if(event.target===this)this.classList.remove('active')">
+    <div class="modal">
+      <h2>Credits</h2>
+
+      <div class="credit-row">
+        <span class="credit-name">Joseph</span>
+        <span class="credit-rank rank-owner">Owner</span>
+      </div>
+
+      <div class="credit-row">
+        <span class="credit-name">Greyson</span>
+        <span class="credit-rank rank-coowner">Co-Owner</span>
+      </div>
+
+      <div class="credit-row">
+        <span class="credit-name">Shane</span>
+        <span class="credit-rank rank-admin">Admin</span>
+      </div>
+
+      <div class="credit-row">
+        <span class="credit-name">Cam</span>
+        <span class="credit-rank rank-admin">Admin</span>
+      </div>
+
+      <div class="credit-row">
+        <span class="credit-name">Vj</span>
+        <span class="credit-rank rank-mod">Mod</span>
+      </div>
+
+      <button class="close-btn" onclick="document.getElementById('creditsModal').classList.remove('active')">
+        Close
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>
